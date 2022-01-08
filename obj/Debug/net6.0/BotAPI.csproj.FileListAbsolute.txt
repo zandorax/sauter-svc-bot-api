@@ -27,3 +27,4 @@ C:\Users\admin\OneDrive\Dokumente\Schule\ABBTS\00_Diplomarbeit\BotAPI\obj\Debug\
 C:\Users\admin\OneDrive\Dokumente\Schule\ABBTS\00_Diplomarbeit\BotAPI\obj\Debug\net6.0\BotAPI.genruntimeconfig.cache
 C:\Users\admin\OneDrive\Dokumente\Schule\ABBTS\00_Diplomarbeit\BotAPI\bin\Debug\net6.0\DotNetEnv.dll
 C:\Users\admin\OneDrive\Dokumente\Schule\ABBTS\00_Diplomarbeit\BotAPI\bin\Debug\net6.0\Sprache.dll
+C:\Users\admin\OneDrive\Dokumente\Schule\ABBTS\00_Diplomarbeit\BotAPI\bin\Debug\net6.0\Newtonsoft.Json.dll

@@ -1,19 +1,12 @@
-using DotNetEnv;
-
+using System.Globalization;
 namespace BotAPI.Utility;
 
-public class Login
+public static class Login
 {
-    private static readonly HttpClient client = new HttpClient();
-    
-    static async Task Auth()
-    {
-        await LoginAsync();
-    }
+   
+    public static readonly HttpClient client = new HttpClient();
 
-
-
-    private static async Task LoginAsync()
+    public static async Task LoginAsync()
         {
             DotNetEnv.Env.Load();
             /*var Password = Environment.GetEnvironmentVariable("SVC_PASSWORD");
