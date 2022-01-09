@@ -24,7 +24,7 @@ public class UserController : ControllerBase
         
         return users;
     }
-    [HttpGet("type{id}&filter{filter}")]
+    [HttpGet("?type{id}&filter{filter}")]
     public async Task<ActionResult<List<User>>> GetUser(int id, string filter)
     {
         var option = (UserOption)id;
