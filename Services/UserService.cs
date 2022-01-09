@@ -20,6 +20,7 @@ public static class UserService
         
         string responseString = await response.Content.ReadAsStringAsync();
         List<User> users = JsonConvert.DeserializeObject<List<User>>(responseString);
+        /*zum debugen
         foreach(User Username in users)
             {
                 Console.WriteLine(Username.Id);
@@ -34,7 +35,7 @@ public static class UserService
                 Console.WriteLine();
                 Console.WriteLine("*****************************");
                 Console.WriteLine();
-            }
+            }*/
         return users;
     }
 
