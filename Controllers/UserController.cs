@@ -24,7 +24,8 @@ public class UserController : ControllerBase
         BotAPI.Utility.Login.client.DefaultRequestHeaders.Accept.Add(
         new MediaTypeWithQualityHeaderValue("application/json"));
 
-        var response = await BotAPI.Utility.Login.client.GetAsync("http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/User");
+        string uri = "http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/User";
+        var response = await BotAPI.Utility.Login.client.GetAsync(uri);
         
         string responseString = await response.Content.ReadAsStringAsync();
         List<User> users = JsonConvert.DeserializeObject<List<User>>(responseString);
