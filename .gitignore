@@ -1,4 +1,4 @@
 .env
 obj
 bin
-bin/debug
+.idea
