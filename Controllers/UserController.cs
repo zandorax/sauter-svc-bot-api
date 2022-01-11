@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -18,33 +17,18 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetAll()
     {
-        await BotAPI.Utility.Login.LoginAsync();
-
-        BotAPI.Utility.Login.client.DefaultRequestHeaders.Accept.Clear();
-        BotAPI.Utility.Login.client.DefaultRequestHeaders.Accept.Add(
-        new MediaTypeWithQualityHeaderValue("application/json"));
-
-        var response = await BotAPI.Utility.Login.client.GetAsync("http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/User");
-        
-        string responseString = await response.Content.ReadAsStringAsync();
+        Task<string> taskString = SvcConnector.GetAsync("User");
+        string responseString = taskString.Result;
         List<User> users = JsonConvert.DeserializeObject<List<User>>(responseString);
         
         return users;
     }
-    [HttpGet("type{id}&filter{filter}")]
+    [HttpGet("type{id:int}&filter{filter}")]
     public async Task<ActionResult<List<User>>> GetUser(int id, string filter)
     {
-        await BotAPI.Utility.Login.LoginAsync();
-
-        BotAPI.Utility.Login.client.DefaultRequestHeaders.Accept.Clear();
-        BotAPI.Utility.Login.client.DefaultRequestHeaders.Accept.Add(
-        new MediaTypeWithQualityHeaderValue("application/json"));
-        
         var option = (UserOption)id;
-        string uri = "http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/User?options.type=" + option + "&options.value="+ filter;
-        var response = await BotAPI.Utility.Login.client.GetAsync(uri);
-        
-        string responseString = await response.Content.ReadAsStringAsync();
+        Task<string> taskString = SvcConnector.GetAsync("User?options.type=" + option + "&options.value="+ filter);     
+        string responseString = taskString.Result;
         List<User> users = JsonConvert.DeserializeObject<List<User>>(responseString);
 
         return users;
