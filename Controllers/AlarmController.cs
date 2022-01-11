@@ -1,4 +1,5 @@
 using BotAPI.Models;
+using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ public class AlarmController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Alarm>>> GetActiveAlarm()
     {
-        Task<string> taskString = BotAPI.Utility.GetRequest.getAsync("ActiveAlarm");
+        Task<string> taskString = SvcConnector.GetAsync("ActiveAlarm");
         string responseString = taskString.Result;
         List<Alarm> alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
         
