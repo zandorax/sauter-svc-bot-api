@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tpz9hA7Coy0VEwe+lAvP7MBpNGpJj9uD65YRH27z90AzCnrohZmDTla4Z8n+b4KiF0balB7usTyZ6vTdr4dFpA==",
+  "dgSpecHash": "/0s+Wl1E7JkkILRv+A8+be+YF1tqZGC2FvXxlyHvGsYPBzqw63x4mNQRYBy/QF4Yd5E/I3ScnvMDbOjemDdHaQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\OneDrive\\Dokumente\\Schule\\ABBTS\\00_Diplomarbeit\\BotAPI\\BotAPI.csproj",
+  "projectFilePath": "C:\\Users\\admin\\RiderProjects\\bot-api-system\\BotAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\dotnetenv\\2.2.0\\dotnetenv.2.2.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",

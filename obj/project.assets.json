@@ -4799,11 +4799,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\OneDrive\\Dokumente\\Schule\\ABBTS\\00_Diplomarbeit\\BotAPI\\BotAPI.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\RiderProjects\\bot-api-system\\BotAPI.csproj",
       "projectName": "BotAPI",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Dokumente\\Schule\\ABBTS\\00_Diplomarbeit\\BotAPI\\BotAPI.csproj",
+      "projectPath": "C:\\Users\\admin\\RiderProjects\\bot-api-system\\BotAPI.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\OneDrive\\Dokumente\\Schule\\ABBTS\\00_Diplomarbeit\\BotAPI\\obj\\",
+      "outputPath": "C:\\Users\\admin\\RiderProjects\\bot-api-system\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
