@@ -26,13 +26,13 @@ public class AlarmController : ControllerBase
     }
 
     [HttpGet("dateFrom{unixFrom:long}&dateTo{unixTo:long}&pageNumber{pageNbr:int}&itemsPerPage{items:int}")]
-    public ActionResult<HistoricAlarm> GetHistoricAlarm(long? unixFrom = null, long? unixTo = null, int? pageNbr = null, int? items = null)
+    public async Task<ActionResult<List<HistoricAlarm>>> GetHistoricAlarm(long? unixFrom = null, long? unixTo = null, int? pageNbr = null, int? items = null)
     {
         var uri =
             "HistoricAlarm?options.dateFrom="+unixFrom+"&options.dateTo="+unixTo+"&options.pageNumber="+pageNbr+"&options.itemsPerPage="+items;
         Task<string> taskString = SvcConnector.GetAsync(uri);
         string responseString = taskString.Result;
-        var alarms = JsonConvert.DeserializeObject<HistoricAlarm>(responseString);
+        List<HistoricAlarm> alarms = JsonConvert.DeserializeObject<List<HistoricAlarm>>(responseString);
         
         return alarms;
         
