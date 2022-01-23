@@ -4,6 +4,11 @@ namespace BotAPI.Models;
 
 public class Alarm
 {
+    //Issue 999: response body verbessern
+    public Alarm(int maxAlarms)
+    {
+        this.MaxAlarms = maxAlarms;
+    }
     [JsonPropertyName("ID")]
     public string Id {get; set;}
 
@@ -147,5 +152,10 @@ public class Alarm
 
     [JsonPropertyName("FlagTimestamp")]
     public string FlagTimestamp {get; set;}
+    
+    //Wird benötigt zum Anzeigen wie viele Alrame noch anstehen würden
+    //Eine "Bastellösung" ich möchte einen bessere Lösung finden.
+    public int MaxAlarms {get; set;}
+    
 
 }
