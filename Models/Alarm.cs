@@ -4,31 +4,26 @@ namespace BotAPI.Models;
 
 public class Alarm
 {
-    //Issue 999: response body verbessern
-    public Alarm(int maxAlarms)
-    {
-        this.MaxAlarms = maxAlarms;
-    }
     [JsonPropertyName("ID")]
-    public string Id {get; set;}
+    public int? Id {get; set;}
 
     [JsonPropertyName("DataObjectName")]
     public string DataObjectName {get; set;}
 
     [JsonPropertyName("DataObjectID")]
-    public string DataObjectID {get; set;}
+    public int? DataObjectID {get; set;}
 
     [JsonPropertyName("Transition")]
     public string Transition {get; set;}
     
     [JsonPropertyName("Acknowledged")]
-    public string Acknowledged {get; set;}
+    public bool Acknowledged {get; set;}
 
     [JsonPropertyName("AcknowledgeRequired")]
-    public string AcknowledgeRequired {get; set;}
+    public bool AcknowledgeRequired {get; set;}
 
     [JsonPropertyName("AcknowledgeRequested")]
-    public string AcknowledgeRequested {get; set;}
+    public bool AcknowledgeRequested {get; set;}
 
     [JsonPropertyName("DataObjectAddress")]
     public string DataObjectAddress {get; set;}
@@ -37,16 +32,16 @@ public class Alarm
     public string DataObjectDescription {get; set;}
     
     [JsonPropertyName("DataObjectTypeCode")]
-    public string DataObjectTypeCode {get; set;}
+    public int? DataObjectTypeCode {get; set;}
 
     [JsonPropertyName("DataObjectTypeVendorID")]
-    public string DataObjectTypeVendorID {get; set;}
+    public int? DataObjectTypeVendorID {get; set;}
 
     [JsonPropertyName("DeviceId")]
-    public string DeviceId {get; set;}
+    public int? DeviceId {get; set;}
 
     [JsonPropertyName("PropagateAcknowledge")]
-    public string PropagateAcknowledge {get; set;}
+    public bool PropagateAcknowledge {get; set;}
     
     [JsonPropertyName("DeviceName")]
     public string DeviceName {get; set;}
@@ -61,10 +56,10 @@ public class Alarm
     public string AcknowledgeTimestamp {get; set;}
 
     [JsonPropertyName("NotifyTypeCode")]
-    public string NotifyTypeCode {get; set;}
+    public int? NotifyTypeCode {get; set;}
 
     [JsonPropertyName("ConnectionId")]
-    public string ConnectionId {get; set;}
+    public int? ConnectionId {get; set;}
 
     [JsonPropertyName("ConnectionName")]
     public string ConnectionName {get; set;}
@@ -73,7 +68,7 @@ public class Alarm
     public string ConnectionDescription {get; set;}
 
     [JsonPropertyName("DeviceTypeID")]
-    public string DeviceTypeID {get; set;}
+    public int? DeviceTypeID {get; set;}
     
     [JsonPropertyName("DeviceTypeDescription")]
     public string DeviceTypeDescription {get; set;}
@@ -91,16 +86,16 @@ public class Alarm
     public string ReceivedTimestamp {get; set;}
     
     [JsonPropertyName("Priority")]
-    public string Priority {get; set;}
+    public int? Priority {get; set;}
 
     [JsonPropertyName("NotificationClass")]
-    public string NotificationClass {get; set;}
+    public int? NotificationClass {get; set;}
 
     [JsonPropertyName("FromState")]
-    public string FromState {get; set;}
+    public int? FromState {get; set;}
 
     [JsonPropertyName("ToState")]
-    public string ToState {get; set;}
+    public int? ToState {get; set;}
     
     [JsonPropertyName("Message")]
     public string Message {get; set;}
@@ -109,53 +104,47 @@ public class Alarm
     public string UnitName {get; set;}
 
     [JsonPropertyName("HasComments")]
-    public string HasComments {get; set;}
+    public bool HasComments {get; set;}
 
     [JsonPropertyName("FromUnknownObject")]
-    public string FromUnknownObject {get; set;}
+    public bool FromUnknownObject {get; set;}
 
     [JsonPropertyName("BacNetObjectIdentifier")]
-    public string BacNetObjectIdentifier {get; set;}
+    public int? BacNetObjectIdentifier {get; set;}
 
     [JsonPropertyName("BacNetDeviceIdentifier")]
-    public string BacNetDeviceIdentifier {get; set;}
+    public int? BacNetDeviceIdentifier {get; set;}
 
     [JsonPropertyName("ProcessId")]
-    public string ProcessId {get; set;}
+    public int? ProcessId {get; set;}
 
     [JsonPropertyName("EventValue")]
     public string EventValue {get; set;}
 
     [JsonPropertyName("CanAckObject")]
-    public string CanAckObject {get; set;}
+    public bool CanAckObject {get; set;}
     
     [JsonPropertyName("BindingTypeName")]
     public string BindingTypeName {get; set;}
 
     [JsonPropertyName("BacNetEventType")]
-    public string BacNetEventType {get; set;}
+    public int? BacNetEventType {get; set;}
 
     [JsonPropertyName("SourceTimestamp")]
-    public string SourceTimestamp {get; set;}
+    public long SourceTimestamp {get; set;}
 
     [JsonPropertyName("SourceTag")]
     public string SourceTag {get; set;}
 
     [JsonPropertyName("EventSequence")]
-    public string EventSequence {get; set;}
+    public int? EventSequence {get; set;}
     
     [JsonPropertyName("IsSystemGenerated")]
-    public string IsSystemGenerated {get; set;}
+    public bool IsSystemGenerated {get; set;}
 
     [JsonPropertyName("Flag")]
-    public string Flag {get; set;}
+    public bool Flag {get; set;}
 
     [JsonPropertyName("FlagTimestamp")]
     public string FlagTimestamp {get; set;}
-    
-    //Wird benötigt zum Anzeigen wie viele Alrame noch anstehen würden
-    //Eine "Bastellösung" ich möchte einen bessere Lösung finden.
-    public int MaxAlarms {get; set;}
-    
-
 }
