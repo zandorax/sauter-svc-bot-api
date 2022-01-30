@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +9,26 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class AlarmController : ControllerBase
 {
-    public AlarmController()
-    {
-
-    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Alarm>>> GetActiveAlarm()
+    public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
+        const int maxAlarm = 5;
         Task<string> taskString = SvcConnector.GetAsync("ActiveAlarm");
         string responseString = taskString.Result;
-        List<Alarm> alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
+        var alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
+        var alarmCount = alarms.Count;
+        var response = new ResponseAlarm();
         
-        return alarms;
+        if (alarmCount > maxAlarm)
+        {
+            alarms.RemoveRange(maxAlarm, alarmCount - maxAlarm);
+        }
+        
+        response.Alarms = alarms;
+        response.size = alarmCount;
+        response.name = "Active Alarms";
+
+        return response;
     }
 }
