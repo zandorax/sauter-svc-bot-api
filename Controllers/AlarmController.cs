@@ -14,7 +14,7 @@ public class AlarmController : ControllerBase
     public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
         const int maxAlarm = 5;
-        Task<string> taskString = SvcConnector.GetAsync("ActiveAlarm");
+        Task<string> taskString = SvcConnector.SvcGetAsync("ActiveAlarm");
         string responseString = taskString.Result;
         var alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
         var alarmCount = alarms.Count;
