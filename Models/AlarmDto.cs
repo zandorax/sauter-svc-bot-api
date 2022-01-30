@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace BotAPI.Models;
 
-public class AlarmDto
+public class AlarmDto : IComparable<AlarmDto>
 {
     [JsonIgnore]
     [JsonPropertyName("ID")]
@@ -191,4 +191,12 @@ public class AlarmDto
     [JsonIgnore]
     [JsonPropertyName("FlagTimestamp")]
     public string FlagTimestamp {get; set;}
+    
+    public int CompareTo(AlarmDto? compareAlarmDto)
+    {
+        if (compareAlarmDto == null)
+            return 1;
+        else
+            return this.SourceTimestamp.CompareTo(compareAlarmDto.SourceTimestamp);
+    }
 }
