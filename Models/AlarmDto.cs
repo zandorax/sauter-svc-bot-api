@@ -194,9 +194,6 @@ public class AlarmDto : IComparable<AlarmDto>
     
     public int CompareTo(AlarmDto? compareAlarmDto)
     {
-        if (compareAlarmDto == null)
-            return 1;
-        else
-            return this.SourceTimestamp.CompareTo(compareAlarmDto.SourceTimestamp);
+        return compareAlarmDto == null ? 1 : SourceTimestamp.CompareTo(compareAlarmDto.SourceTimestamp);
     }
 }
