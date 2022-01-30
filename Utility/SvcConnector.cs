@@ -13,9 +13,9 @@ public static class SvcConnector
         Client = new HttpClient();
     }
 
-    public static async Task<string> GetAsync(string apiParam)
+    public static async Task<string> SvcGetAsync(string apiParam)
     {
-        await LoginAsync();
+        await SvcLoginAsync();
         
         Client.DefaultRequestHeaders.Accept.Clear();
         Client.DefaultRequestHeaders.Accept.Add(
@@ -28,9 +28,9 @@ public static class SvcConnector
         return responseString;
     }
 
-    public static async void PostAsync(string postParam, string content)
+    public static async void SvcPostAsync(string postParam, string content)
     {
-        await LoginAsync();
+        await SvcLoginAsync();
         
         Client.DefaultRequestHeaders.Accept.Clear();
         Client.DefaultRequestHeaders.Accept.Add(
@@ -43,7 +43,7 @@ public static class SvcConnector
     }
         
 
-    private static async Task LoginAsync()
+    private static async Task SvcLoginAsync()
     {
         DotNetEnv.Env.Load();
         

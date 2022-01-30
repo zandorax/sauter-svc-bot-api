@@ -25,7 +25,7 @@ public class AckTransitionController : ControllerBase
 
         var body = JsonConvert.SerializeObject(request);
         
-        SvcConnector.PostAsync("AckTransition", body);
+        SvcConnector.SvcPostAsync("AckTransition", body);
         
     }
 }
