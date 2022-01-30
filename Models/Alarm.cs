@@ -105,11 +105,11 @@ public class Alarm
     [JsonPropertyName("BacDateTime")]
     public string BacDateTime {get; set;}
 
-    [JsonIgnore]
+    
     [JsonPropertyName("ReceivedTimestamp")]
     public string ReceivedTimestamp {get; set;}
     
-    [JsonIgnore]
+    
     [JsonPropertyName("Priority")]
     public int? Priority {get; set;}
 
@@ -117,6 +117,7 @@ public class Alarm
     [JsonPropertyName("NotificationClass")]
     public int? NotificationClass {get; set;}
 
+    [JsonIgnore]
     [JsonPropertyName("FromState")]
     public int? FromState {get; set;}
 
