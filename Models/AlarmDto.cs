@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace BotAPI.Models;
 
-public class Alarm
+public class AlarmDto
 {
     [JsonIgnore]
     [JsonPropertyName("ID")]

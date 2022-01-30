@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace BotAPI.Models;
 
-public class User
+public class UserDto
 {
     [JsonPropertyName("ID")]
     public string Id {get; set;}
