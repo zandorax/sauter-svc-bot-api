@@ -1,6 +1,6 @@
 ﻿namespace BotAPI.Models;
 
-public class ResponseBody
+public class ResponseAlarm
 {
     public string name { get; set; }
     public int size { get; set; }

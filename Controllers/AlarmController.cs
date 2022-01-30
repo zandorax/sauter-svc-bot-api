@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace BotAPI.Controllers;
 
@@ -12,31 +9,25 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class AlarmController : ControllerBase
 {
-    public AlarmController()
-    {
-
-    }
 
     [HttpGet]
-    public async Task<ActionResult<ResponseBody>> GetActiveAlarm()
+    public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
-        
+        const int maxAlarm = 5;
         Task<string> taskString = SvcConnector.GetAsync("ActiveAlarm");
         string responseString = taskString.Result;
-        List<Alarm> alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
+        var alarms = JsonConvert.DeserializeObject<List<Alarm>>(responseString);
         var alarmCount = alarms.Count;
-
-        var response = new ResponseBody();
+        var response = new ResponseAlarm();
         
-        if (alarmCount > 5)
+        if (alarmCount > maxAlarm)
         {
-            alarms.RemoveRange(5, alarmCount - 5);
+            alarms.RemoveRange(maxAlarm, alarmCount - maxAlarm);
         }
-        
         
         response.Alarms = alarms;
         response.size = alarmCount;
-        response.name = "NinjaCat hits critical";
+        response.name = "Active Alarms";
 
         return response;
     }
