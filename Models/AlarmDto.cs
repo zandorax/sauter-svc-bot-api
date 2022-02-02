@@ -34,7 +34,7 @@ public class AlarmDto : IComparable<AlarmDto>
     [JsonPropertyName("DataObjectAddress")]
     public string DataObjectAddress {get; set;}
 
-    [JsonIgnore]
+    
     [JsonPropertyName("DataObjectDescription")]
     public string DataObjectDescription {get; set;}
     
@@ -57,7 +57,8 @@ public class AlarmDto : IComparable<AlarmDto>
     [JsonIgnore]
     [JsonPropertyName("DeviceName")]
     public string DeviceName {get; set;}
-
+    
+    [JsonIgnore]
     [JsonPropertyName("DeviceDescription")]
     public string DeviceDescription {get; set;}
 

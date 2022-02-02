@@ -11,7 +11,7 @@ namespace BotAPI.Controllers;
 public class AckTransitionController : ControllerBase
 {
     [HttpPost]
-    public async Task PostAckTransition(int objId, int toState, string comment)
+    public async Task PostAckTransition(int objId, int toState, string? comment)
     {
         DotNetEnv.Env.Load();
         
@@ -25,7 +25,8 @@ public class AckTransitionController : ControllerBase
 
         var body = JsonConvert.SerializeObject(request);
         
-        SvcConnector.SvcPostAsync("AckTransition", body);
-        
+        //SvcConnector.SvcPostAsync("AckTransition", body);
+        Console.WriteLine(body);
+        Console.WriteLine("nice!");
     }
 }

@@ -33,7 +33,7 @@ public class AlarmController : ControllerBase
         
         //setzt die Alarm Liste zusammen
         response.Alarms = alarms;
-        response.size = alarmCount;
+        response.size = 1;
         response.name = "Active Alarms";
 
         return response;
