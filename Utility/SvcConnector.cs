@@ -11,32 +11,29 @@ public static class SvcConnector
     static SvcConnector()
     {
         Client = new HttpClient();
+        Client.DefaultRequestHeaders.Accept.Clear();
+        Client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
     public static async Task<string> SvcGetAsync(string apiParam)
     {
         await SvcLoginAsync();
         
-        Client.DefaultRequestHeaders.Accept.Clear();
-        Client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-        var uri = "http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/" + apiParam;
+        DotNetEnv.Env.Load();
+        var uri = Environment.GetEnvironmentVariable("SVC_URI") + apiParam;
         var response = await Client.GetAsync(uri);
         
         string responseString = await response.Content.ReadAsStringAsync();
         return responseString;
     }
 
-    public static async void SvcPostAsync(string postParam, string content)
+    public static async void SvcPostAsync(string apiParam, string content)
     {
         await SvcLoginAsync();
         
-        Client.DefaultRequestHeaders.Accept.Clear();
-        Client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-        var uri = "http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/" + postParam;
+        DotNetEnv.Env.Load();
+        var uri = Environment.GetEnvironmentVariable("SVC_URI") + apiParam;
         var requestContent = new StringContent(content, Encoding.UTF8, "application/json");
         await Client.PostAsync(uri, requestContent);
         
