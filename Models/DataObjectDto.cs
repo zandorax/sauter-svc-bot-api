@@ -4,10 +4,10 @@ namespace BotAPI.Models;
 
 public class DataObjectDto
 {
-     public int ObjectId { get; set; }
-     public int PropertyId { get; set; }
+     public long ObjectId { get; set; }
+     public long PropertyId { get; set; }
      public int Priority { get; set; }
      public string NewValue { get; set; }
      public string Password { get; set; }
-     public string Comments { get; set; }
+     public string? Comments { get; set; }
 }

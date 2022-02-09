@@ -32,6 +32,29 @@ public class DataObjectController : ControllerBase
         return dataObjects;
     }
 
+    [HttpPost]
+    public async Task PostDataObject(long objectId, long propertyId, int priority, string newValue, string? comment)
+    {
+        DotNetEnv.Env.Load();
+
+        var request = new DataObjectDto()
+        {
+            ObjectId = objectId,
+            PropertyId = propertyId,
+            Priority = priority,
+            NewValue = newValue,
+            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD"),
+            Comments = comment
+        };
+
+        var body = JsonConvert.SerializeObject(request);
+        
+        SvcConnector.SvcPostAsync("DataObject",body);
+        Console.WriteLine(body);
+        Console.WriteLine("nice!");
+
+    }
+
 
 
 }
