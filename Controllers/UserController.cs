@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +9,6 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    public UserController()
-    {
-
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetAll()
     {
@@ -25,6 +18,7 @@ public class UserController : ControllerBase
         
         return users;
     }
+    
     [HttpGet("type{id:int}&filter{filter}")]
     public async Task<ActionResult<List<UserDto>>> GetUser(int id, string filter)
     {
