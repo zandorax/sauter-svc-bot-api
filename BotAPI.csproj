@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="QuickChart" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
