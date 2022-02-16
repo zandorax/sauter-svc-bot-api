@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BotAPI.Models;
+using BotAPI.Utility;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using QuickChart;
 
 namespace BotAPI.Controllers;
@@ -9,26 +12,40 @@ namespace BotAPI.Controllers;
 public class TrendController : ControllerBase
 {
     [HttpGet]
-    public string GetTrend()
+    /*public string GetTrend()
     {
-        return GetChart();
-    }
-    private string GetChart()
-    {
-        double[] data = new double[24];
-        data[0] = 25;
-        for (int i = 1; i < 4; i++)
-        {
-            data[i] = 20*i;
-        }
-
-        data[4] = 80;
-        for (int i = 5; i < data.Length; i++)
-        {
-            data[i] = 1.968*i;
-        }
         
-        string requestData = String.Join(",", data);
+        return DrawChart(2);
+    }*/
+    public async Task<string> GetTrendList()
+    {
+        long dateTo = 637803936000000000;//DateTime.Now.Ticks;
+        long dateFrom = 637802208000000000;//dateTo;
+        Task<string> taskString;
+        string apiParam = "AggregatedData?" +
+                          "options.objectId=120" +
+                          "&options.dateFrom=" + dateFrom +
+                          "&options.dateTo=" + dateTo +
+                          "&options.pageNumber=1" +
+                          "&options.itemsPerPage=1000" +
+                          "&options.aggregationType=AVG" +
+                          "&options.aggregationLevel=Hour";
+        taskString = SvcConnector.SvcGetAsync(apiParam);
+        string responseString = taskString.Result;
+        var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(responseString);
+        
+        
+        
+        
+        return DrawChart(dataValues);
+    }
+    private string DrawChart(AggregatedDataDto values)
+    {
+
+        string lables = "'1','2','3','4,'5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'";
+        string requestData = string.Join(",", values);
+
+      
         
         Chart chart = new Chart
         {
@@ -37,9 +54,11 @@ public class TrendController : ControllerBase
             Config = "{\r\n"+
                      "type: 'line',\r\n"             +
                      "data: {\r\n"                   +
-                     "labels: ['0h','3h','6h','9','12h','15h','18','21h','24h'],\r\n" +
+                     "labels: ["                     +
+                     lables                          +
+                     "],\r\n"                        +
                      "datasets: [{\r\n"              +
-                     "label: 'Mein Beispiel',\r\n"     +
+                     "label: 'Mein Beispiel',\r\n"   +
                      "data: ["                       +
                      requestData                     +
                      "]\r\n"                         +

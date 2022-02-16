@@ -1,8 +1,11 @@
-﻿namespace BotAPI.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace BotAPI.Models;
 
 public class DataObjectListDto
 {
     public List<DataObjectList> Objects { get; set; }
+    [JsonIgnore]
     public int PageCount { get; set; }
 }
 
