@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace BotAPI.Models;
+﻿namespace BotAPI.Models;
 
 public class DataObjectListDto
 {
