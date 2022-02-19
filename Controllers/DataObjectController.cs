@@ -9,47 +9,56 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class DataObjectController : ControllerBase
 {
-    [HttpGet("search")]
+    [HttpGet]
     public async Task<ActionResult<List<DataObject>>> GetDataObject(string? objectName, string? objectUnit, string? objectType)
     {
-        List<DataObject> results = null;
-        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
-                                                           objectName
-                                                           + "&options.pageNumber=1&options.itemsPerPage=10");
-        string responseString = taskString.Result;
+        List<DataObject>? results = null;
+        Task<string> taskString;
+
+        if (objectName == null)
+        {
+            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10");
+        }
+        else
+        {
+            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
+                                                  objectName
+                                                  + "&options.pageNumber=1&options.itemsPerPage=10");
+        }
+
+        var responseString = taskString.Result;
         var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(responseString);
 
-        var trimUnit = objectUnit.Trim();
-        if (trimUnit.Length > 0)
+        //werden keine Objekte vom SVC zurückgegeben wird ein BadRequest angezeigt
+        if (dataObjects == null)
         {
+            return BadRequest();
+        }
+        
+        if (objectUnit != null)
+        {
+            var trimUnit = objectUnit.Trim();
             results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
         }
 
-        var trimType = objectType.Trim();
-        if (trimType.Length > 0)
+        
+        if (objectType != null)
         {
+            var trimType = objectType.Trim();
             results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
         }
 
-        if (results == null)
-        {
-            results = dataObjects.Objects;
-        }
+        results ??= dataObjects.Objects;
         
+        //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
+        if (results.Count == 0)
+        {
+            return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
+        }
 
         return results;
     }
-
-    [HttpGet]
-    public async Task<ActionResult<DataObjectListDto>> GetDataObjectList()
-    {
-        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
-        string responseString = taskString.Result;
-        var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(responseString);
-
-        return dataObjects;
-    }
-
+    
     [HttpPost]
     public async Task PostDataObject(long objectId, long propertyId, int priority, string newValue, string? comment)
     {
@@ -72,7 +81,4 @@ public class DataObjectController : ControllerBase
         Console.WriteLine("nice!");
 
     }
-
-
-
 }
