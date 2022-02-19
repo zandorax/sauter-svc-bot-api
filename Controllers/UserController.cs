@@ -1,3 +1,4 @@
+using System.Net;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -12,21 +13,34 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetAll()
     {
-        Task<string> taskString = SvcConnector.SvcGetAsync("User");
-        string responseString = taskString.Result;
-        List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
-        
-        return users;
+        Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("User");
+        string? responseString = response.Result.Content.ToString();
+        if (response.Result.StatusCode == HttpStatusCode.OK)
+        {
+            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
+            return users;
+        }
+
+        return BadRequest(responseString);
+
+
     }
     
     [HttpGet("type{id:int}&filter{filter}")]
     public async Task<ActionResult<List<UserDto>>> GetUser(int id, string filter)
     {
         var option = (UserOption)id;
-        Task<string> taskString = SvcConnector.SvcGetAsync("User?options.type=" + option + "&options.value="+ filter);     
-        string responseString = taskString.Result;
-        List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
+        var trimFilter = filter.Trim();
+        Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("User?options.type=" + option + "&options.value="+ trimFilter);     
+        string responseString = response.Result.Content.ToString();
+        if (response.Result.StatusCode == HttpStatusCode.OK)
+        {
+            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
+            return users;
+        }
 
-        return users;
+        return BadRequest();
+
+
     }
 }

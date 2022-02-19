@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -16,7 +17,7 @@ public static class SvcConnector
             new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public static async Task<string> SvcGetAsync(string apiParam)
+    public static async Task<HttpResponseMessage> SvcGetAsync(string apiParam)
     {
         await SvcLoginAsync();
         
@@ -24,8 +25,8 @@ public static class SvcConnector
         var uri = Environment.GetEnvironmentVariable("SVC_API_URI") + apiParam;
         var response = await Client.GetAsync(uri);
         
-        string responseString = await response.Content.ReadAsStringAsync();
-        return responseString;
+
+        return response;
     }
 
     public static async void SvcPostAsync(string apiParam, string content)

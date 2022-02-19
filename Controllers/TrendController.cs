@@ -13,11 +13,10 @@ namespace BotAPI.Controllers;
 public class TrendController : ControllerBase
 {
     [HttpGet("day")]
-    public async Task<string> GetTrendDay(int objectId)
+    public async Task<string> GetTrendDay(int? objectId)
     {
         long dateTo = DateTime.Now.Ticks;
         long dateFrom = dateTo - (TimeSpan.TicksPerHour * 24);
-        Task<string> taskString;
         string apiParam = "AggregatedData?" +
                           "options.objectId="  + objectId +
                           "&options.dateFrom=" + dateFrom +
@@ -26,26 +25,34 @@ public class TrendController : ControllerBase
                           "&options.itemsPerPage=30" +
                           "&options.aggregationType=AVG" +
                           "&options.aggregationLevel=Hour";
-        
-        taskString = SvcConnector.SvcGetAsync(apiParam);
-        string responseString = taskString.Result;
-        var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(responseString);
-        string[] labelArray = new string[24];
-        for (int i = 0; i < 24; i++)
+        try
         {
-            var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * (i+1)));
-            labelArray[i] = string.Concat("'"+ dateFromTicks.ToString("HH:mm")+"'");
+            var response = SvcConnector.SvcGetAsync(apiParam);
+            response.Result.EnsureSuccessStatusCode();
+            Task<string> responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(taskString);
+            string[] labelArray = new string[24];
+            for (int i = 0; i < 24; i++)
+            {
+                var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * (i + 1)));
+                labelArray[i] = string.Concat("'" + dateFromTicks.ToString("HH:mm") + "'");
+            }
+
+            var labels = String.Join(",", labelArray);
+            return DrawChart(dataValues, labels);
         }
-        var labels = String.Join(",", labelArray);
-        return DrawChart(dataValues, labels);
+        catch(HttpRequestException exception)
+        {
+            return exception.Message;
+        }
     }
 
     [HttpGet("Week")]
-    public async Task<string> GetTrendWeek(int objectId)
+    public async Task<string> GetTrendWeek(int? objectId)
     {
         long dateTo = DateTime.Now.Ticks;
         long dateFrom = dateTo - (TimeSpan.TicksPerDay * 7);
-        Task<string> taskString;
         string apiParam = "AggregatedData?" +
                           "options.objectId="  + objectId +
                           "&options.dateFrom=" + dateFrom +
@@ -53,27 +60,34 @@ public class TrendController : ControllerBase
                           "&options.pageNumber=1" +
                           "&options.itemsPerPage=30" +
                           "&options.aggregationType=AVG" +
-                          "&options.aggregationLevel=Hour";
-        
-        taskString = SvcConnector.SvcGetAsync(apiParam);
-        string responseString = taskString.Result;
-        var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(responseString);
-        
-        string[] labelArray = new string[7];
-        for (int i = 0; i < 7; i++)
+                          "&options.aggregationLevel=Day";
+        try
         {
-            var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerDay * (i+1)));
-            labelArray[i] = string.Concat("'"+ dateFromTicks.ToString("HH:mm")+"'");
+            var response = SvcConnector.SvcGetAsync(apiParam);
+            response.Result.EnsureSuccessStatusCode();
+            Task<string> responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(taskString);
+
+            string[] labelArray = new string[7];
+            for (int i = 0; i < 7; i++)
+            {
+                var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerDay * (i + 1)));
+                labelArray[i] = string.Concat("'" + dateFromTicks.ToString("d") + "'");
+            }
+
+            var labels = String.Join(",", labelArray);
+
+            return DrawChart(dataValues, labels);
         }
-        var labels = String.Join(",", labelArray);
-        
-        return DrawChart(dataValues, labels);
+        catch (HttpRequestException exception)
+        {
+            return exception.Message;
+        }
     }
     
     private string DrawChart(AggregatedDataDto values , string labels)
     {
-
-        //string lables = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24";
         string[] requestDataArray = new String[values.AggregatedDataValues.Count];
         string label = "Trend für Objekt";
         for(int i = 0; i < values.AggregatedDataValues.Count; i++)
