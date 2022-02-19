@@ -51,6 +51,6 @@ public static class SvcConnector
         };
 
         var content = new FormUrlEncodedContent(body);
-        await Client.PostAsync("http://sautervisioncenter.demo.sauter-bc.com/VisionCenterApiService/api/Login", content);
+        await Client.PostAsync(Environment.GetEnvironmentVariable("SVC_API_URI")+"Login", content);
     }
 }

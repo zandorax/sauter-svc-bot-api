@@ -4,12 +4,11 @@ namespace BotAPI.Models;
 
 public class DataObjectListDto
 {
-    public List<DataObjectList> Objects { get; set; }
-    [JsonIgnore]
+    public List<DataObject> Objects { get; set; }
     public int PageCount { get; set; }
 }
 
-public class DataObjectList
+public class DataObject
 {
     public int Id { get; set; }
     public string Name { get; set; }
