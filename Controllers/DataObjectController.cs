@@ -10,15 +10,20 @@ namespace BotAPI.Controllers;
 public class DataObjectController : ControllerBase
 {
     [HttpGet("search")]
-    public async Task<ActionResult<DataObjectListDto>> GetDataObject(string objectName)
+    public async Task<ActionResult<DataObjectListDto>> GetDataObject(string objectName, string objectUnit, int objectType)
     {
-        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
-                                                           objectName
-                                                           + "&options.pageNumber=1&options.itemsPerPage=10000");
+        List<DataObjectList> results;
+        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
         string responseString = taskString.Result;
         var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(responseString);
+
+        var trim = objectUnit.Trim();
+        if (trim.Length > 0)
+        {
+            results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trim);
+        }
         
-        
+
         return dataObjects;
     }
 
