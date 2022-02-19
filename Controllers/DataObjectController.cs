@@ -10,21 +10,34 @@ namespace BotAPI.Controllers;
 public class DataObjectController : ControllerBase
 {
     [HttpGet("search")]
-    public async Task<ActionResult<DataObjectListDto>> GetDataObject(string objectName, string objectUnit, int objectType)
+    public async Task<ActionResult<List<DataObject>>> GetDataObject(string? objectName, string? objectUnit, string? objectType)
     {
-        List<DataObjectList> results;
-        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
+        List<DataObject> results = null;
+        Task<string> taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
+                                                           objectName
+                                                           + "&options.pageNumber=1&options.itemsPerPage=10");
         string responseString = taskString.Result;
         var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(responseString);
 
-        var trim = objectUnit.Trim();
-        if (trim.Length > 0)
+        var trimUnit = objectUnit.Trim();
+        if (trimUnit.Length > 0)
         {
-            results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trim);
+            results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
+        }
+
+        var trimType = objectType.Trim();
+        if (trimType.Length > 0)
+        {
+            results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
+        }
+
+        if (results == null)
+        {
+            results = dataObjects.Objects;
         }
         
 
-        return dataObjects;
+        return results;
     }
 
     [HttpGet]
