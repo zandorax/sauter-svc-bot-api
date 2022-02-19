@@ -13,17 +13,21 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetAll()
     {
-        Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("User");
-        string? responseString = response.Result.Content.ToString();
-        if (response.Result.StatusCode == HttpStatusCode.OK)
+        try
         {
-            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
+            Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("User");
+            response.Result.EnsureSuccessStatusCode();
+            var responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            
+            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(taskString);
             return users;
         }
-
-        return BadRequest(responseString);
-
-
+        catch (HttpRequestException exception)
+        { 
+            return BadRequest(exception.Message);
+        }
+        
     }
     
     [HttpGet("type{id:int}&filter{filter}")]
@@ -31,16 +35,21 @@ public class UserController : ControllerBase
     {
         var option = (UserOption)id;
         var trimFilter = filter.Trim();
-        Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("User?options.type=" + option + "&options.value="+ trimFilter);     
-        string responseString = response.Result.Content.ToString();
-        if (response.Result.StatusCode == HttpStatusCode.OK)
+        try
         {
-            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(responseString);
+            Task<HttpResponseMessage> response =
+                SvcConnector.SvcGetAsync("User?options.type=" + option + "&options.value=" + trimFilter);
+            response.Result.EnsureSuccessStatusCode();
+            var responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            List<UserDto> users = JsonConvert.DeserializeObject<List<UserDto>>(taskString);
+           
             return users;
+            
         }
-
-        return BadRequest();
-
-
+        catch (HttpRequestException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 }
