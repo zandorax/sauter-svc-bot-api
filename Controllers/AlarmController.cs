@@ -1,4 +1,3 @@
-using System.Net;
 using BotAPI.Models;
 using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +14,13 @@ public class AlarmController : ControllerBase
     public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
         const int maxAlarm = 5;
-        
-        Task<HttpResponseMessage> response = SvcConnector.SvcGetAsync("ActiveAlarm");
-        Task<string> responseString = response.Result.Content.ReadAsStringAsync();
-        var convertString = responseString.Result;
-
-        if (response.Result.StatusCode == HttpStatusCode.OK)
+        try
         {
-            var alarms = JsonConvert.DeserializeObject<List<AlarmDto>>(convertString);
+            var response = SvcConnector.SvcGetAsync("ActiveAlarm");
+            response.Result.EnsureSuccessStatusCode();
+            Task<string> responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var alarms = JsonConvert.DeserializeObject<List<AlarmDto>>(taskString);
             var alarmCount = alarms.Count;
             var responseAlarm = new ResponseAlarm();
 
@@ -43,7 +41,9 @@ public class AlarmController : ControllerBase
 
             return responseAlarm;
         }
-
-        return BadRequest(responseString);
+        catch (HttpRequestException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 }
