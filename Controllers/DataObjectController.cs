@@ -9,21 +9,21 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class DataObjectController : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionResult<List<DataObject>>> GetDataObject(string? objectName, string? objectUnit, string? objectType)
+    [HttpGet("search")]
+    public async Task<ActionResult<List<DataObject>>> GetDataObjects(string? objectName, string? objectUnit, string? objectType)
     {
         List<DataObject>? results = null;
         Task<string> taskString;
 
         if (objectName == null)
         {
-            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10");
+            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
         }
         else
         {
             taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
                                                   objectName
-                                                  + "&options.pageNumber=1&options.itemsPerPage=10");
+                                                  + "&options.pageNumber=1&options.itemsPerPage=10000");
         }
 
         var responseString = taskString.Result;
@@ -57,6 +57,18 @@ public class DataObjectController : ControllerBase
         }
 
         return results;
+    }
+
+    [HttpGet("value")]
+    public async Task<ActionResult<DataObjectDto>> GetDataObjectValue(int objectId)
+    {
+        //(propertyId=85 entspricht present-value) Vorgabe SVC
+        Task<string> taskString = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
+        string responseString = taskString.Result;
+        var dataObject = JsonConvert.DeserializeObject<DataObjectDto>(responseString);
+
+
+        return dataObject;
     }
     
     [HttpPost]
