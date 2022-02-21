@@ -10,7 +10,7 @@ namespace BotAPI.Controllers;
 public class DataObjectController : ControllerBase
 {
     [HttpGet("search")]
-    public async Task<ActionResult<List<DataObject>>> GetDataObjects(string? objectName, string? objectUnit, string? objectType)
+    public async Task<ActionResult<DataObjectListDto>> GetDataObjects(string? objectName, string? objectUnit, string? objectType)
     {
         List<DataObject>? results = null;
         Task<string> taskString;
@@ -56,7 +56,10 @@ public class DataObjectController : ControllerBase
             return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
         }
 
-        return results;
+        DataObjectListDto result = null;
+        result.Objects = results;
+        result.Size = results.Count;
+        return result;
     }
 
     [HttpGet("value")]
