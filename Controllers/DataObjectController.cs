@@ -33,7 +33,7 @@ public class DataObjectController : ControllerBase
             var taskString = responseString.Result;
             var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(taskString);
 
-            //werden keine Objekte vom SVC zurückgegeben wird ein BadRequest angezeigt
+            //wird kein Objekt vom SVC zurückgegeben wird ein BadRequest angezeigt
             if (dataObjects == null)
             {
                 return NoContent();
@@ -42,22 +42,21 @@ public class DataObjectController : ControllerBase
             if (objectUnit != null)
             {
                 var trimUnit = objectUnit.Trim();
-                results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
+                results?.AddRange(dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit));
             }
 
-            if (objectType != null)
+            if (results != null)
             {
                 var trimType = objectType.Trim();
-                results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
+                results?.AddRange(dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType));
+            }
+            else
+            {
+                var trimType = objectType.Trim();
+                results?.AddRange(results.FindAll(svcObject => svcObject.ObjectType == trimType));
             }
 
             results ??= dataObjects.Objects;
-
-            //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
-            if (results.Count == 0)
-            {
-                return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
-            }
 
             return results.Count switch
             {
@@ -106,7 +105,7 @@ public class DataObjectController : ControllerBase
             PropertyId = propertyId,
             Priority = priority,
             NewValue = newValue,
-            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD"),
+            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Environment variable is not loaded"),
             Comments = comment
         };
 
