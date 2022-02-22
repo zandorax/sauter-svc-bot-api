@@ -45,7 +45,6 @@ public class DataObjectController : ControllerBase
                 results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
             }
 
-
             if (objectType != null)
             {
                 var trimType = objectType.Trim();
@@ -67,13 +66,12 @@ public class DataObjectController : ControllerBase
             return BadRequest(exception.Message);
         }
 
-        if (results.Count > 10)
+        return results.Count switch
         {
-            return BadRequest("Zu viele Ergebnisse");
-        }
-
-        
-        return results;
+            0 => BadRequest("Keine Daten mit diesen Suchparametern gefunden."), //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
+            > 10 => BadRequest("Zu viele Ergebnisse"),                          //Damit der Benutzer des Chatbot nicht mit Objekten überschwemmt wird gibt es eine Obergrenze
+            _ => results
+        };
     }
 
     [HttpGet("value")]
@@ -82,12 +80,12 @@ public class DataObjectController : ControllerBase
         try
         {
             //(propertyId=85 entspricht present-value) Vorgabe SVC
-            Task<HttpResponseMessage> response =
-                SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
-            response.Result.EnsureSuccessStatusCode();
-            var responseString = response.Result.Content.ReadAsStringAsync();
-            var taskString = responseString.Result;
-            var dataObject = JsonConvert.DeserializeObject<DataObjectDto>(taskString);
+            Task<string> taskString = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
+            var responseString = taskString.Result.Replace("\"",""); //Es wird ein String vom SVC übergeben damit keine doppel Anführungszeichen angezeigt werden müssen sie entfernt werden.
+            var dataObject = new DataObjectDto
+            {
+              NewValue = responseString
+            };
             if (dataObject.NewValue == null)
             {
                 return NoContent();
