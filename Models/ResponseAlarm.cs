@@ -2,6 +2,6 @@
 
 public class ResponseAlarm
 {
-    public int size { get; set; }
-    public List<AlarmDto> Alarms { get; set; }
+    public int Size { get; set; }
+    public List<AlarmDto>? Alarms { get; set; }
 }

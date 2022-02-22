@@ -37,7 +37,7 @@ public class AlarmController : ControllerBase
 
             //setzt die Alarm Liste zusammen
             responseAlarm.Alarms = alarms;
-            responseAlarm.size = alarms.Count;
+            responseAlarm.Size = alarms.Count;
 
             return responseAlarm;
         }
