@@ -49,20 +49,13 @@ public class DataObjectController : ControllerBase
         }
 
         results ??= dataObjects.Objects;
-        
-        //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
-        if (results.Count == 0)
-        {
-            return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
-        }
 
-        if (results.Count > 10)
+        return results.Count switch
         {
-            return BadRequest("Zu viele Ergebnisse");
-        }
-
-        
-        return results;
+            0 => BadRequest("Keine Daten mit diesen Suchparametern gefunden."), //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
+            > 10 => BadRequest("Zu viele Ergebnisse"),                          //Damit der Benutzer des Chatbot nicht mit Objekten überschwemmt wird gibt es eine Obergrenze
+            _ => results
+        };
     }
 
     [HttpGet("value")]
@@ -70,9 +63,11 @@ public class DataObjectController : ControllerBase
     {
         //(propertyId=85 entspricht present-value) Vorgabe SVC
         Task<string> taskString = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
-        string responseString = taskString.Result;
-        var dataObject = JsonConvert.DeserializeObject<DataObjectDto>(responseString);
-
+        var responseString = taskString.Result.Replace("\"",""); //Es wird ein String vom SVC übergeben damit keine doppel Anführungszeichen angezeigt werden müssen sie entfernt werden.
+        var dataObject = new DataObjectDto
+        {
+            NewValue = responseString
+        };
 
         return dataObject;
     }
