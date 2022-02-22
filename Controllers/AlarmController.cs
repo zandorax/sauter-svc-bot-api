@@ -14,28 +14,36 @@ public class AlarmController : ControllerBase
     public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
         const int maxAlarm = 5;
-        
-        Task<string> taskString = SvcConnector.SvcGetAsync("ActiveAlarm");
-        string responseString = taskString.Result;
-        var alarms = JsonConvert.DeserializeObject<List<AlarmDto>>(responseString);
-        var alarmCount = alarms.Count;
-        var response = new ResponseAlarm();
-        
-        //Sortiert die Alarme nach Datum(neuste zuerst)
-        alarms.Sort();
-        alarms.Reverse();
-        
-        //entfert alle Alarme die maxAlarm überschreiten
-        if (alarmCount > maxAlarm)
+        try
         {
-            alarms.RemoveRange(maxAlarm, alarmCount - maxAlarm);
-        }
-        
-        //setzt die Alarm Liste zusammen
-        response.Alarms = alarms;
-        response.size = alarmCount;
-        response.name = "Active Alarms";
+            var response = SvcConnector.SvcGetAsync("ActiveAlarm");
+            response.Result.EnsureSuccessStatusCode();
+            Task<string> responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var alarms = JsonConvert.DeserializeObject<List<AlarmDto>>(taskString);
+            var alarmCount = alarms.Count;
+            var responseAlarm = new ResponseAlarm();
 
-        return response;
+            //Sortiert die Alarme nach Datum(neuste zuerst)
+            alarms.Sort();
+            alarms.Reverse();
+
+            //entfert alle Alarme die maxAlarm überschreiten
+            if (alarmCount > maxAlarm)
+            {
+                alarms.RemoveRange(maxAlarm, alarmCount - maxAlarm);
+            }
+
+            //setzt die Alarm Liste zusammen
+            responseAlarm.Alarms = alarms;
+            responseAlarm.size = alarmCount;
+            responseAlarm.name = "Active Alarms";
+
+            return responseAlarm;
+        }
+        catch (HttpRequestException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 }
