@@ -47,7 +47,7 @@ public class TrendController : ControllerBase
         }
     }
 
-    [HttpGet("Week")]
+    [HttpGet("week")]
     public async Task<string> GetTrendWeek(int? objectId)
     {
         long dateTo = DateTime.Now.Ticks;
