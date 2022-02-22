@@ -13,47 +13,58 @@ public class DataObjectController : ControllerBase
     public async Task<ActionResult<List<DataObject>>> GetDataObjects(string? objectName, string? objectUnit, string? objectType)
     {
         List<DataObject>? results = null;
-        Task<string> taskString;
+        try
+        {
+            Task<HttpResponseMessage> response;
+            if (objectName == null)
+            {
+                response = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
+            }
+            else
+            {
+                response = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
+                                                    objectName
+                                                    + "&options.pageNumber=1&options.itemsPerPage=10000");
+            }
 
-        if (objectName == null)
-        {
-            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.pageNumber=1&options.itemsPerPage=10000");
-        }
-        else
-        {
-            taskString = SvcConnector.SvcGetAsync("DataObjectList?options.type=ObjectName&options.value=" +
-                                                  objectName
-                                                  + "&options.pageNumber=1&options.itemsPerPage=10000");
-        }
+            response.Result.EnsureSuccessStatusCode();
+            
+            var responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(taskString);
 
-        var responseString = taskString.Result;
-        var dataObjects = JsonConvert.DeserializeObject<DataObjectListDto>(responseString);
+            //werden keine Objekte vom SVC zurückgegeben wird ein BadRequest angezeigt
+            if (dataObjects == null)
+            {
+                return NoContent();
+            }
 
-        //werden keine Objekte vom SVC zurückgegeben wird ein BadRequest angezeigt
-        if (dataObjects == null)
-        {
-            return BadRequest();
-        }
-        
-        if (objectUnit != null)
-        {
-            var trimUnit = objectUnit.Trim();
-            results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
-        }
+            if (objectUnit != null)
+            {
+                var trimUnit = objectUnit.Trim();
+                results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
+            }
 
-        
-        if (objectType != null)
-        {
-            var trimType = objectType.Trim();
-            results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
-        }
 
-        results ??= dataObjects.Objects;
-        
-        //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
-        if (results.Count == 0)
+            if (objectType != null)
+            {
+                var trimType = objectType.Trim();
+                results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
+            }
+
+            results ??= dataObjects.Objects;
+
+            //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
+            if (results.Count == 0)
+            {
+                return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
+            }
+
+            return results;
+        }
+        catch (HttpRequestException exception)
         {
-            return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
+            return BadRequest(exception.Message);
         }
 
         if (results.Count > 10)
@@ -66,15 +77,29 @@ public class DataObjectController : ControllerBase
     }
 
     [HttpGet("value")]
-    public async Task<ActionResult<DataObjectDto>> GetDataObjectValue(int objectId)
+    public async Task<ActionResult<DataObjectDto>> GetDataObjectValue(int? objectId)
     {
-        //(propertyId=85 entspricht present-value) Vorgabe SVC
-        Task<string> taskString = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
-        string responseString = taskString.Result;
-        var dataObject = JsonConvert.DeserializeObject<DataObjectDto>(responseString);
+        try
+        {
+            //(propertyId=85 entspricht present-value) Vorgabe SVC
+            Task<HttpResponseMessage> response =
+                SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
+            response.Result.EnsureSuccessStatusCode();
+            var responseString = response.Result.Content.ReadAsStringAsync();
+            var taskString = responseString.Result;
+            var dataObject = JsonConvert.DeserializeObject<DataObjectDto>(taskString);
+            if (dataObject.NewValue == null)
+            {
+                return NoContent();
+            }
 
-
-        return dataObject;
+            return dataObject;
+        }
+        catch (HttpRequestException exception)
+        {
+            //Gibt (Objek ID '0' existiert nicht) zurück. Dies kommt vom SVC. Bei einer Abfrage mit objectId = null
+            return BadRequest(exception.Message);
+        }
     }
     
     [HttpPost]
