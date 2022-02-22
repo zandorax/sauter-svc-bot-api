@@ -42,18 +42,18 @@ public class DataObjectController : ControllerBase
             if (objectUnit != null)
             {
                 var trimUnit = objectUnit.Trim();
-                results?.AddRange(dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit));
+                results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
             }
 
-            if (results != null)
+            if (results == null)
             {
                 var trimType = objectType.Trim();
-                results?.AddRange(dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType));
+                results = dataObjects.Objects.FindAll(svcObject => svcObject.ObjectType == trimType);
             }
             else
             {
                 var trimType = objectType.Trim();
-                results?.AddRange(results.FindAll(svcObject => svcObject.ObjectType == trimType));
+                results = results.FindAll(svcObject => svcObject.ObjectType == trimType);
             }
 
             results ??= dataObjects.Objects;
