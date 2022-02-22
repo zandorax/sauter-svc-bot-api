@@ -66,6 +66,14 @@ public class DataObjectController : ControllerBase
         {
             return BadRequest(exception.Message);
         }
+
+        if (results.Count > 10)
+        {
+            return BadRequest("Zu viele Ergebnisse");
+        }
+
+        
+        return results;
     }
 
     [HttpGet("value")]

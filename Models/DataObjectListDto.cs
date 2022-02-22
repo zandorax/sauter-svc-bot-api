@@ -2,6 +2,7 @@
 
 public class DataObjectListDto
 {
+    public int Size { get; set; }
     public List<DataObject> Objects { get; set; }
     public int PageCount { get; set; }
 }
