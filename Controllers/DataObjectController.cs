@@ -59,19 +59,17 @@ public class DataObjectController : ControllerBase
                 return BadRequest("Keine Daten mit diesen Suchparametern gefunden.");
             }
 
-            return results;
+            return results.Count switch
+            {
+                0 => BadRequest("Keine Daten mit diesen Suchparametern gefunden."), //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
+                > 10 => BadRequest("Zu viele Ergebnisse"),                          //Damit der Benutzer des Chatbot nicht mit Objekten überschwemmt wird gibt es eine Obergrenze
+                _ => results
+            };
         }
         catch (HttpRequestException exception)
         {
             return BadRequest(exception.Message);
         }
-
-        return results.Count switch
-        {
-            0 => BadRequest("Keine Daten mit diesen Suchparametern gefunden."), //ist results leer weil die Suchanfrage keine Objekte liefert wird ein BadRequest ausgegeben
-            > 10 => BadRequest("Zu viele Ergebnisse"),                          //Damit der Benutzer des Chatbot nicht mit Objekten überschwemmt wird gibt es eine Obergrenze
-            _ => results
-        };
     }
 
     [HttpGet("value")]
@@ -80,17 +78,14 @@ public class DataObjectController : ControllerBase
         try
         {
             //(propertyId=85 entspricht present-value) Vorgabe SVC
-            Task<string> taskString = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
+            var response = SvcConnector.SvcGetAsync("DataObject?options.objectId=" + objectId + "&options.propertyId=85");
+            response.Result.EnsureSuccessStatusCode();
+            Task<string> taskString = response.Result.Content.ReadAsStringAsync();
             var responseString = taskString.Result.Replace("\"",""); //Es wird ein String vom SVC übergeben damit keine doppel Anführungszeichen angezeigt werden müssen sie entfernt werden.
             var dataObject = new DataObjectDto
             {
               NewValue = responseString
             };
-            if (dataObject.NewValue == null)
-            {
-                return NoContent();
-            }
-
             return dataObject;
         }
         catch (HttpRequestException exception)
