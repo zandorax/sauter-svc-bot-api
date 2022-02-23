@@ -1,4 +1,5 @@
 ﻿using BotAPI.Models;
+using BotAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -24,8 +25,6 @@ public class AckTransitionController : ControllerBase
 
         var body = JsonConvert.SerializeObject(request);
         
-        //SvcConnector.SvcPostAsync("AckTransition", body);
-        Console.WriteLine(body);
-        Console.WriteLine("nice!");
+        SvcConnector.SvcPostAsync("AckTransition", body);
     }
 }
