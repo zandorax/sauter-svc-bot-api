@@ -22,21 +22,23 @@ public class AlarmController : ControllerBase
             Task<string> responseString = response.Result.Content.ReadAsStringAsync();
             var taskString = responseString.Result;
             var alarms = JsonConvert.DeserializeObject<List<AlarmDto>>(taskString);
-            var responseAlarm = new ResponseAlarm
-            {
-                Size = alarms.Count
-            };
+            var responseAlarm = new ResponseAlarm();
+
+            //Sucht nach allen Alarmen die noch nicht Quittiert wurden
+            alarms = alarms.FindAll(ackObject => ackObject.Acknowledged == false);
+            responseAlarm.Size = alarms.Count;
 
             //Sortiert die Alarme nach Datum(neuste zuerst)
             alarms.Sort();
             alarms.Reverse();
 
 
+            /* Es wird kein Limit mehr benötigt
             //entfert alle Alarme die maxAlarm überschreiten
             if (alarms.Count > maxAlarm)
             {
                 alarms.RemoveRange(maxAlarm, alarms.Count - maxAlarm);
-            }
+            }*/
 
             //setzt die Alarm Liste zusammen
             responseAlarm.Alarms = alarms;
