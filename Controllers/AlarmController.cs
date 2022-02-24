@@ -13,8 +13,6 @@ public class AlarmController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
-        //Definiert die maximale Anzahl von Alarmen die im Bot dargestellt werden
-        const int maxAlarm = 5;
         try
         {
             var response = SvcConnector.SvcGetAsync("ActiveAlarm");
