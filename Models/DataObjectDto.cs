@@ -10,7 +10,7 @@ public class DataObjectDto
      public long PropertyId { get; set; }
      [JsonIgnore]
      public int Priority { get; set; }
-     [JsonPropertyName("actual-value")]
+     [JsonPropertyName("value")]
      public string NewValue { get; set; }
      [JsonIgnore]
      public string Password { get; set; }
