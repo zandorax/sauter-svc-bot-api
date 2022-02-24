@@ -11,7 +11,7 @@ namespace BotAPI.Controllers;
 public class AckTransitionController : ControllerBase
 {
     [HttpPost]
-    public async Task PostAckTransition(int objId, int toState, string? comment)
+    public async Task PostAckTransition(int objId, int? toState, string? comment)
     {
         DotNetEnv.Env.Load();
         
