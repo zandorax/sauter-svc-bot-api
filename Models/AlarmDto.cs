@@ -118,10 +118,11 @@ public class AlarmDto : IComparable<AlarmDto>
     [JsonPropertyName("NotificationClass")]
     public int? NotificationClass {get; set;}
 
-    [JsonIgnore]
+    
     [JsonPropertyName("FromState")]
     public int? FromState {get; set;}
-
+    
+    [JsonIgnore]
     [JsonPropertyName("ToState")]
     public int? ToState {get; set;}
     
