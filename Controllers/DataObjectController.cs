@@ -95,8 +95,10 @@ public class DataObjectController : ControllerBase
     }
     
     [HttpPost]
-    public async Task PostDataObject(long objectId, long propertyId, int priority, string newValue, string? comment)
+    public async Task PostDataObject(long objectId, string newValue, string? comment)
     {
+        const long propertyId = 85; //Der Wert kommt aus dem SVC und beschreibt welcher Wert überschrieben werden soll.
+        const int priority = 8; //Wert aus dem SVC steht für Handeintrag/Handschaltung
         DotNetEnv.Env.Load();
 
         var request = new DataObjectDto()
