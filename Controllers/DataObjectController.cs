@@ -105,7 +105,7 @@ public class DataObjectController : ControllerBase
             PropertyId = propertyId,
             Priority = priority,
             NewValue = newValue,
-            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Environment variable is not loaded"),
+            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Umgebungsvariabel ist nicht erreichbar"),
             Comments = comment
         };
 
