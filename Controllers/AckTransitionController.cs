@@ -25,7 +25,7 @@ public class AckTransitionController : ControllerBase
         {
             ObjectId = objId,
             ToState = toState,
-            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Umgebungsvariabel ist nicht erreichbar"),
+            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Umgebungsvariabel ist nicht geladen"),
             Comment = comment
         };
 

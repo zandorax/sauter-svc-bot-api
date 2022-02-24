@@ -105,7 +105,7 @@ public class DataObjectController : ControllerBase
             PropertyId = propertyId,
             Priority = priority,
             NewValue = newValue,
-            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Umgebungsvariabel ist nicht erreichbar"),
+            Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? throw new InvalidOperationException("Umgebungsvariabel ist nicht gealden"),
             Comments = comment
         };
 
