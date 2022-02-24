@@ -108,11 +108,11 @@ public class DataObjectController : ControllerBase
                 PropertyId = propertyId,
                 Priority = priority,
                 NewValue = newValue,
-                Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ??
+                Password = Environment.GetEnvironmentVariable("SVC_PASSWORD") ?? 
                            throw new InvalidOperationException("Umgebungsvariabel ist nicht gealden"),
                 Comments = comment
             };
-
+            
             var body = JsonConvert.SerializeObject(request);
 
             SvcConnector.SvcPostAsync("DataObject", body);
