@@ -11,16 +11,19 @@ namespace BotAPI.Controllers;
 public class AckTransitionController : ControllerBase
 {
     [HttpPost]
-    public async Task PostAckTransition(int objId, int fromState, string? comment)
+    public async Task<ActionResult> PostAckTransition(int objId, int? fromState, string? comment)
     {
         DotNetEnv.Env.Load();
         int? toState = fromState switch
         {
-            3 => 2,
-            0 => null,
-            _ => null
+            3 => null,
+            0 => 2,
+            _ => 99
         };
-
+        if (toState == 99)
+        {
+           return BadRequest("invalid state");
+        }
         var request = new AckTransitionDto
         {
             ObjectId = objId,
@@ -32,5 +35,6 @@ public class AckTransitionController : ControllerBase
         var body = JsonConvert.SerializeObject(request);
         
         SvcConnector.SvcPostAsync("AckTransition", body);
+        return Ok();
     }
 }
