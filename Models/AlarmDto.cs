@@ -110,7 +110,7 @@ public class AlarmDto : IComparable<AlarmDto>
     [JsonPropertyName("ReceivedTimestamp")]
     public string ReceivedTimestamp {get; set;}
     
-    [JsonIgnore]
+    
     [JsonPropertyName("Priority")]
     public int? Priority {get; set;}
 
