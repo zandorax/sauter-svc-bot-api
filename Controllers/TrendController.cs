@@ -32,12 +32,14 @@ public class TrendController : ControllerBase
             var taskString = responseString.Result;
             var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(taskString);
             string[] labelArray = new string[24];
+            
             for (int i = 0; i < 24; i++)
             {
                 var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * (i + 1)));
                 labelArray[i] = string.Concat("'" + dateFromTicks.ToString("HH:mm") + "'");
             }
-
+            
+            Array.Reverse(labelArray);
             var labels = String.Join(",", labelArray);
             return DrawChart(dataValues, labels);
         }
@@ -74,7 +76,7 @@ public class TrendController : ControllerBase
                 var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerDay * (i + 1)));
                 labelArray[i] = string.Concat("'" + dateFromTicks.ToString("d") + "'");
             }
-
+            Array.Reverse(labelArray);
             var labels = String.Join(",", labelArray);
 
             return DrawChart(dataValues, labels);
