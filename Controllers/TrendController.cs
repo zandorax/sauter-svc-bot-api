@@ -35,8 +35,8 @@ public class TrendController : ControllerBase
             
             for (int i = 0; i < 24; i++)
             {
-                var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * (i + 1)));
-                labelArray[i] = string.Concat("'" + dateFromTicks.ToString("HH:mm") + "'");
+                var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * i));
+                labelArray[i] = string.Concat("'" + dateFromTicks.ToString("yyyy-M-d HH:mm") + "'");
             }
             
             Array.Reverse(labelArray);
