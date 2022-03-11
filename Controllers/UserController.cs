@@ -9,6 +9,10 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+    /// <summary>
+    /// Request all users of SVC
+    /// </summary>
+    /// <returns>Returns an object of type UserDto. Contains all users</returns>
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetAll()
     {
@@ -29,6 +33,12 @@ public class UserController : ControllerBase
         
     }
     
+    /// <summary>
+    /// Filtered query of users of the SVC
+    /// </summary>
+    /// <param name="id">Search by id 1 = name, 2 = email or 3 = phone</param>
+    /// <param name="filter">Enter a string to specify the search for example a last name</param>
+    /// <returns>Returns an object of type UserDto. Contains filtered users</returns>
     [HttpGet("type{id:int}&filter{filter}")]
     public async Task<ActionResult<List<UserDto>>> GetUser(int id, string filter)
     {
