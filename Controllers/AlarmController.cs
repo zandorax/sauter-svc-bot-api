@@ -10,12 +10,17 @@ namespace BotAPI.Controllers;
 public class AlarmController : ControllerBase
 {
 
+    /// <summary>
+    /// The active acknowledgeable alarms are requested.
+    /// </summary>
+    /// <returns>An object of the ResponseAlarm type is returned. It shows the number of pending alarms and their properties</returns>
     [HttpGet]
     public async Task<ActionResult<ResponseAlarm>> GetActiveAlarm()
     {
         try
         {
             var response = SvcConnector.SvcGetAsync("ActiveAlarm");
+            //Prüft die Rückgabe der SVC API auf Fehler
             response.Result.EnsureSuccessStatusCode();
             Task<string> responseString = response.Result.Content.ReadAsStringAsync();
             var taskString = responseString.Result;

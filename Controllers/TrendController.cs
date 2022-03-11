@@ -11,9 +11,15 @@ namespace BotAPI.Controllers;
 
 public class TrendController : ControllerBase
 {
+    /// <summary>
+    /// Query data over 24 hours. they are hourly averages.
+    /// </summary>
+    /// <param name="objectId">Datapoint Id</param>
+    /// <returns>The return is a URL to the chart with the requested data</returns>
     [HttpGet("day")]
     public async Task<string> GetTrendDay(int? objectId)
     {
+        //Generiert die Zeitstempel für die Abfrage
         long dateTo = DateTime.Now.Ticks;
         long dateFrom = dateTo - (TimeSpan.TicksPerHour * 24);
         string apiParam = "AggregatedData?" +
@@ -27,12 +33,14 @@ public class TrendController : ControllerBase
         try
         {
             var response = SvcConnector.SvcGetAsync(apiParam);
+            //Prüft die Rückgabe der SVC API auf Fehler
             response.Result.EnsureSuccessStatusCode();
             Task<string> responseString = response.Result.Content.ReadAsStringAsync();
             var taskString = responseString.Result;
             var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(taskString);
-            string[] labelArray = new string[24];
             
+            //Zusammenstellen der Labels für die X-Achse
+            string[] labelArray = new string[24];
             for (int i = 0; i < 24; i++)
             {
                 var dateFromTicks = new DateTime(dateTo - (TimeSpan.TicksPerHour * i));
@@ -41,6 +49,7 @@ public class TrendController : ControllerBase
             
             Array.Reverse(labelArray);
             var labels = String.Join(",", labelArray);
+            
             return DrawChart(dataValues, labels);
         }
         catch(HttpRequestException exception)
@@ -48,7 +57,12 @@ public class TrendController : ControllerBase
             return exception.Message;
         }
     }
-
+    
+    /// <summary>
+    /// Query data over 7 days. they are daily averages.
+    /// </summary>
+    /// <param name="objectId">Datapoint Id</param>
+    /// <returns>The return is a URL to the chart with the requested data</returns>
     [HttpGet("week")]
     public async Task<string> GetTrendWeek(int? objectId)
     {
@@ -70,6 +84,7 @@ public class TrendController : ControllerBase
             var taskString = responseString.Result;
             var dataValues = JsonConvert.DeserializeObject<AggregatedDataDto>(taskString);
 
+            //Zusammenstellen der Labels für die X-Achse
             string[] labelArray = new string[7];
             for (int i = 0; i < 7; i++)
             {
@@ -87,6 +102,7 @@ public class TrendController : ControllerBase
         }
     }
     
+    //Erstellt die Konfiguration für Chart.js respektive QuickChart
     private string DrawChart(AggregatedDataDto values , string labels)
     {
         string[] requestDataArray = new String[values.AggregatedDataValues.Count];

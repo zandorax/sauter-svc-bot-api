@@ -10,6 +10,14 @@ namespace BotAPI.Controllers;
 
 public class AckTransitionController : ControllerBase
 {
+    /// <summary>
+    /// Provides the option to acknowledge an alarm.
+    /// </summary>
+    /// <param name="objId">Object id of the object to be switched</param>
+    /// <param name="fromState">from which status the object comes. is used for status transition</param>
+    /// <param name="comment">A chance to leave a comment</param>
+    /// <returns>HTTP status code</returns>
+    /// <exception cref="InvalidOperationException">Detects if the environment variable is loaded</exception>
     [HttpPost]
     public async Task<ActionResult> PostAckTransition(int objId, int? fromState, string? comment)
     {
@@ -17,6 +25,7 @@ public class AckTransitionController : ControllerBase
         try
         {
             //Status wird von SVC bestimmt. Evt müssen weitere hinzugefügt werden
+            //Das Svc hat mehrere Übergangsstaten. Hier wird der richtige Übergang gewählt.
             int? toState = fromState switch
             {
                 3 => null,

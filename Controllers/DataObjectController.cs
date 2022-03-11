@@ -9,6 +9,13 @@ namespace BotAPI.Controllers;
 [Route("[controller]")]
 public class DataObjectController : ControllerBase
 {
+    /// <summary>
+    /// Data object search
+    /// </summary>
+    /// <param name="objectName">User address of the object</param>
+    /// <param name="objectUnit">Unit of the searched object</param>
+    /// <param name="objectType">Objekttype</param>
+    /// <returns>Returns a list with the searched objects. If too many objects are found, a message is returned. The search must be specified more precisely</returns>
     [HttpGet("search")]
     public async Task<ActionResult<List<DataObject>>> GetDataObjects(string? objectName, string? objectUnit, string? objectType)
     {
@@ -38,13 +45,13 @@ public class DataObjectController : ControllerBase
             {
                 return NoContent();
             }
-
+            //Checkt ob nach einer Einheit gesucht wird
             if (objectUnit != null)
             {
                 var trimUnit = objectUnit.Trim();
                 results = dataObjects.Objects.FindAll(svcObject => svcObject.Unit == trimUnit);
             }
-
+            //Checkt ob Inhalt vorhanden ist
             if (results == null)
             {
                 var trimType = objectType.Trim();
@@ -71,6 +78,11 @@ public class DataObjectController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Displays the current value of a data object
+    /// </summary>
+    /// <param name="objectId">Data object id</param>
+    /// <returns>Returns an object of type DataObject. This contains the current value</returns>
     [HttpGet("value")]
     public async Task<ActionResult<DataObjectDto>> GetDataObjectValue(int? objectId)
     {
@@ -93,7 +105,15 @@ public class DataObjectController : ControllerBase
             return BadRequest(exception.Message);
         }
     }
-    
+   
+    /// <summary>
+    /// Provides the ability to change values in the SVC
+    /// </summary>
+    /// <param name="objectId">Data object id</param>
+    /// <param name="newValue">The value to be passed to the SVC</param>
+    /// <param name="comment">A chance to leave a comment</param>
+    /// <returns>HTTP status code</returns>
+    /// <exception cref="InvalidOperationException">Detects if the environment variable is loaded</exception>
     [HttpPost]
     public async Task<ActionResult> PostDataObject(long objectId, string newValue, string? comment)
     {
